@@ -1,7 +1,8 @@
+import { ThemeProvider } from "@/components/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { shadcn } from "@clerk/themes";
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,19 +15,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-      >
-         <ThemeProvider
+    <ClerkProvider
+      appearance={{
+        baseTheme: [shadcn],
+      }}
+    >
+      <html lang="en">
+        <body>
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-
-        {children}
+            {children}
           </ThemeProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
