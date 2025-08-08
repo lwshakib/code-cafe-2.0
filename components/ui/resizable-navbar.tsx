@@ -9,6 +9,9 @@ import {
 } from "motion/react";
 
 import React, { useRef, useState } from "react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import Image from "next/image";
 
 
 interface NavbarProps {
@@ -69,7 +72,7 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     <motion.div
       ref={ref}
       // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
-      className={cn("sticky inset-x-0 top-20 z-40 w-full", className)}
+      className={cn("sticky inset-x-0 top-5 z-40 w-full", className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
@@ -231,19 +234,22 @@ export const MobileNavToggle = ({
 };
 
 export const NavbarLogo = () => {
+  const {resolvedTheme} = useTheme()
   return (
-    <a
-      href="#"
+    <Link
+      href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
-      <img
-        src="https://assets.aceternity.com/logo-dark.png"
+      <>
+      <Image
+        src={resolvedTheme === "dark" ? "/cafe_dark.svg" : "/cafe_light.svg"}
         alt="logo"
-        width={30}
-        height={30}
+        width={20}
+        height={20}
       />
-      <span className="font-medium text-black dark:text-white">Startup</span>
-    </a>
+      <span className="font-medium text-black dark:text-white">Code Cafe 2.0</span>
+      </>
+    </Link>
   );
 };
 

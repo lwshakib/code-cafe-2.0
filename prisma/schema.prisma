@@ -6,10 +6,40 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  imageUrl String
+  clerkId String @unique
+  cafes Cafe[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cafe {
+  id String @id @default(cuid())
+  clerkId String
+  user User @relation(fields: [clerkId], references: [clerkId], onDelete: Cascade)
+  name String
+  messages Message[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id String @id @default(cuid())
+  cafeId String
+  cafe Cafe @relation(fields: [cafeId], references: [id], onDelete: Cascade)
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

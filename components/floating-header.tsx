@@ -11,6 +11,7 @@ import {
   NavItems,
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
+import { ModeToggle } from "./mode-toggle";
 
 export function FloatingHeader() {
   const navItems = [
@@ -36,9 +37,8 @@ export function FloatingHeader() {
       <NavBody>
         <NavbarLogo />
         <NavItems items={navItems} />
-        <div className="flex items-center gap-4">
-          <NavbarButton variant="secondary">Login</NavbarButton>
-          <NavbarButton variant="primary">Book a call</NavbarButton>
+        <div className="flex items-center gap-4 z-10">
+          <ModeToggle />
         </div>
       </NavBody>
 
@@ -67,20 +67,7 @@ export function FloatingHeader() {
             </a>
           ))}
           <div className="flex w-full flex-col gap-4">
-            <NavbarButton
-              onClick={() => setIsMobileMenuOpen(false)}
-              variant="primary"
-              className="w-full"
-            >
-              Login
-            </NavbarButton>
-            <NavbarButton
-              onClick={() => setIsMobileMenuOpen(false)}
-              variant="primary"
-              className="w-full"
-            >
-              Book a call
-            </NavbarButton>
+            <ModeToggle />
           </div>
         </MobileNavMenu>
       </MobileNav>
