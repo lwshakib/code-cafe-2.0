@@ -27,9 +27,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const router = useRouter();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -37,7 +39,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarTrigger className="w-4 h-4" />
         </div>
         <div className="flex items-center justify-between mb-2">
-          <SidebarMenuButton tooltip="Create a new Cafe">
+          <SidebarMenuButton tooltip="Create a new Cafe" onClick={() => {
+            router.push("/");
+          }}>
             <Plus className="h-4 w-4" />
             <span>Create a new Cafe</span>
           </SidebarMenuButton>

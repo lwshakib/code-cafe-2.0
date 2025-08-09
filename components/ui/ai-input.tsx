@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Bot, Command, Paperclip, Plus, Send, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -16,6 +17,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useCafeContext } from "@/context/CafeProvider";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { Cafe } from "@/types/cafe";
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -88,7 +91,8 @@ export default function AiInput() {
     minHeight: MIN_HEIGHT,
     maxHeight: MAX_HEIGHT,
   });
-  const { model, setModel } = useCafeContext();
+  const { model, setModel, cafes, setCafes } = useCafeContext();
+  const router = useRouter();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showCommands, setShowCommands] = useState(false);
   const [hoveredCommand, setHoveredCommand] = useState<number | null>(null);
@@ -204,7 +208,42 @@ export default function AiInput() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!value.trim()) return;
+
+    try {
+      const promise = fetch('/api/cafe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      toast.promise(promise, {
+        loading: 'Creating cafe...',
+        success: 'Cafe created successfully',
+        error: 'Failed to create cafe',
+      });
+
+      const response = await promise;
+
+
+      if (response.ok) {
+        const cafe = await response.json();
+        setCafes((prevCafes: Cafe[]) => [...prevCafes, cafe]);
+        console.log('Cafe created:', cafe);
+        
+        // Redirect to the cafe page with the message
+        router.push(`/~/${cafe.id}?message=${encodeURIComponent(value)}`);
+      } else {
+        console.error('Failed to create cafe:', response.statusText);
+        toast.error('Failed to create cafe');
+      }
+    } catch (error) {
+      console.error('Error creating cafe:', error);
+      toast.error('Error creating cafe');
+    }
+
     setValue("");
     adjustHeight(true);
   };

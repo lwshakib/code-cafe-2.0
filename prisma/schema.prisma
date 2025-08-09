@@ -14,6 +14,12 @@ datasource db {
 }
 
 
+
+enum Sender {
+  USER
+  CAFE
+}
+
 model User {
   id String @id @default(cuid())
   name String
@@ -21,6 +27,7 @@ model User {
   imageUrl String
   clerkId String @unique
   cafes Cafe[]
+  messages Message[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -37,9 +44,13 @@ model Cafe {
 
 model Message {
   id String @id @default(cuid())
+  clerkId String
+  user User @relation(fields: [clerkId], references: [clerkId], onDelete: Cascade)
   cafeId String
   cafe Cafe @relation(fields: [cafeId], references: [id], onDelete: Cascade)
   content String
+  imageUrl String?
+  sender Sender @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
